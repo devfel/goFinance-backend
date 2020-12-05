@@ -6,6 +6,13 @@ import Transaction from '../models/Transaction';
 import Category from '../models/Category';
 import TransactionsRepository from '../repositories/TransactionsRepository';
 
+interface CSVTransaction {
+  title: string;
+  type: 'income' | 'outcome';
+  value: number;
+  category: string;
+}
+
 class ImportTransactionsService {
   async execute(filePath: string): Promise<Transaction[]> {
     const transactionRepository = getCustomRepository(TransactionsRepository);
@@ -18,12 +25,6 @@ class ImportTransactionsService {
       from_line: 2, //ignore first line since it is just our header on our file.
     });
 
-    interface CSVTransaction {
-      title: string;
-      type: 'income' | 'outcome';
-      value: number;
-      category: string;
-    }
     const parseCSV = contactsReadStream.pipe(parsers);
 
     const transactions: CSVTransaction[] = [];
@@ -67,6 +68,24 @@ class ImportTransactionsService {
     );
 
     await categoriesRepository.save(newCategories);
+
+    const finalCategories = [...newCategories, ...existentCategories];
+
+    const createdTransaction = transactionRepository.create(
+      transactions.map(transaction => ({
+        title: transaction.title,
+        type: transaction.type,
+        value: transaction.value,
+        category: finalCategories.find(
+          category => transaction.category === category.title,
+        ),
+      })),
+    );
+
+    await transactionRepository.save(createdTransaction);
+
+    await fs.promises.unlink(filePath);
+    return createdTransaction;
   }
 }
 
