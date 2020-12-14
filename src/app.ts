@@ -8,11 +8,13 @@ import routes from './routes';
 import AppError from './errors/AppError';
 
 import createConnection from './database';
+import cors from 'cors';
 
 createConnection();
 const app = express();
 
 app.use(express.json());
+app.use(cors());
 app.use(routes);
 
 app.use((err: Error, request: Request, response: Response, _: NextFunction) => {
