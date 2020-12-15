@@ -15,7 +15,7 @@
 ---
 
 <p align="center"> 
-In this backend applicting I developed a transaction management application in order to get practice with Node.js together with TypeScript including the use of a Postgres database with TypeORM and sending files with Multer. This application allows the storage of incomes and outcomes financial transactions and allow the registration and listing of those transactions, in addition to allowing the creation of new records in the database by sending a csv file.
+In this backend application I developed a transaction management application in order to get practice with Node.js together with TypeScript including the use of a Postgres database with TypeORM and sending files with Multer. This application allows the storage of incomes and outcomes financial transactions and allow the registration and listing of those transactions, in addition to allowing the creation of new records in the database by sending a csv file.
   </p>
 
 ---
